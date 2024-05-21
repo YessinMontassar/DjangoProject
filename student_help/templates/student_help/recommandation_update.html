@@ -1,0 +1,29 @@
+{% extends 'student_help/base.html' %}
+{% load static %}
+{% block title %} {% endblock title %}
+{% block content %}
+<style>
+    .custom-form {
+      background-color: #f7f7f7;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    }
+  </style>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="custom-form">
+          <h2 class="text-center mb-4">Edit Post</h2>
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-outline-success btn-block mt-4">Save</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+{% endblock %}

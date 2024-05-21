@@ -1,0 +1,29 @@
+{% extends "student_help/base.html" %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Notifications</h2>
+
+    <h3>Unread Notifications</h3>
+    <ul>
+        {% for notification in unread_notifications %}
+        <li>
+            {{ notification.message }} - {{ notification.created_at }}
+            <form method="post" action="{% url 'mark_single_notification_as_read' notification.id %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-success">Mark as Read</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h3>Read Notifications</h3>
+    <ul>
+        {% for notification in read_notifications %}
+        <li>{{ notification.message }} - {{ notification.created_at }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

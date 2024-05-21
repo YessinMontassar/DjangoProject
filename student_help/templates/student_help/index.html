@@ -3,10 +3,56 @@
 {% block title %}Accueil{% endblock %}
 
 {% block content %}
-<div class="container" style="padding-left: 80px;">
-    <h2>Bienvenue sur la page d'accueil !</h2>
-    <p>Contenu de la page d'accueil...</p>
+
+
+
+
+<!-- Header with full-height image -->
+<header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
+  <div class="w3-display-left w3-text-white" style="padding:48px">
+    <span class="w3-jumbo w3-hide-small">Welcome to Student Help</span><br>
+    <span class="w3-xxlarge w3-hide-large w3-hide-medium">Cliquez ici</span><br>
+    <span class="w3-large">This integrated space will be used to manage all administrative and educational operations for students.</span>
+    <p><a href="#about" class="w3-button w3-white w3-padding-large w3-large w3-margin-top w3-opacity w3-hover-opacity-off">Click here to view our services.</a></p>
+  </div> 
+  <div class="w3-display-bottomleft w3-text-grey w3-large" style="padding:24px 48px">
+    <i class="fa fa-facebook-official w3-hover-opacity"></i>
+    <i class="fa fa-instagram w3-hover-opacity"></i>
+    <i class="fa fa-snapchat w3-hover-opacity"></i>
+    <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+    <i class="fa fa-twitter w3-hover-opacity"></i>
+    <i class="fa fa-linkedin w3-hover-opacity"></i>
+  </div>
+</header>
+
+<!-- About Section -->
+<div class="w3-container" style="padding:128px 16px" id="about">
+  <h3 class="w3-center">About</h3>
+  <p class="w3-center w3-large">Our services for our students</p>
+  <div class="w3-row-padding w3-center" style="margin-top:64px">
+    <div class="w3-quarter">
+      <i class="fa fa-bus w3-margin-bottom w3-jumbo w3-center"></i>
+      <p class="w3-large">Transport</p>
+      <p>Our transportation service ensures reliable travel between residences, campuses, internships and external events. Regular schedules, modern fleet and experienced drivers for your comfort and safety.</p>
+    </div>
+    <div class="w3-quarter">
+      <i class="fa fa-building w3-margin-bottom w3-jumbo"></i>
+      <p class="w3-large">Logement</p>
+      <p>Our accommodation service offers practical and comfortable accommodation options for students, ranging from university residences to student apartments, all equipped and located close to campuses and essential amenities.</p>
+    </div>
+    <div class="w3-quarter">
+      <i class="fa fa-graduation-cap w3-margin-bottom w3-jumbo"></i>
+      <p class="w3-large">Stages</p>
+      <p>Our internship service offers practical and enriching opportunities in various fields. In collaboration with a wide network of companies, we offer personalized support in finding relevant internships, tailored to students' interests and professional goals.</p>
+      </div>
+    <div class="w3-quarter">
+      <i class="fa fa-calendar w3-margin-bottom w3-jumbo"></i>
+      <p class="w3-large">Events </p>
+      <p>Our events service offers a multitude of cultural and sporting activities to enrich student life. From concerts to athletic competitions, we create a dynamic environment for fun, connection and growth within the university community.</p> </div>
+  </div>
 </div>
+
+
   
    
 {% endblock %}

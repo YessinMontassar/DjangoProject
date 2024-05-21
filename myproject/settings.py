@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
-
+from celery import Celery
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'student_help.apps.StudentHelpConfig',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -129,7 +130,15 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [ os.path.join(BASE_DIR,'static'), ]
 
 STATICFILES_DIRS = [BASE_DIR / "static", '/var/www/static/', ]
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'student_help.settings')
 
+app = Celery('student_help')
+app.config_from_object('django.conf:settings', namespace='CELERY')
+app.autodiscover_tasks()
+# settings.py
+
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'login'
 
 
 

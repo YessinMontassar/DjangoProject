@@ -1,0 +1,112 @@
+<!-- Dans votre fichier accommodations.html (template) -->
+{% extends "student_help/base.html" %}
+
+{% block title %}Accommodations{% endblock %}
+
+{% block content %}
+<br>
+<div class="container">
+  <div style="padding-left: 60px;">
+    <a style="background-color:#11101d;color: aliceblue;" class="btn btn-outline-primary" href="{% url 'cree_accommodation' %}" role="button">Post 📥</a>
+  </div>
+  {% for accommodation in accommodations %}
+  <div class="card mx-auto" style="width: 40rem;">
+    <div class="card-header">
+        <div class="comment d-flex justify-content-between align-items-center">
+            <h5><img src="{{ accommodation.user.profile.profile_picture.url }}" class="profile-picture-sm rounded-circle" alt="Profile Picture">{{ accommodation.user.username }}</h5>
+            {% if accommodation.user == request.user %}
+            <div>
+                <form method="post" action="{% url 'delete_post' post_id=accommodation.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger"><i class='bx bx-trash'></i></button>
+                </form>
+                <form method="post" action="{% url 'modifier_accommodation' accommodation.pk %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-success"><i class='bx bxs-edit' ></i></button>
+
+            </div>
+       
+        {% endif %}
+    
+          </div>
+      <!-- Ajoutez ici d'autres champs spécifiques à l'hébergement -->
+      <hr>
+    </div>
+    {% if accommodation.image %}
+    <img src="{{ accommodation.image.url }}" class="card-img-top" alt="...">
+    {% endif %}
+    
+    <div class="card-body">
+      <h5 class="card-title">{{ accommodation.company }}</h5>
+      <p class="card-text">location : {{ accommodation.location }}</p>
+      <p class="card-text">Phone Number : {{ accommodation.contactInfo }}</p>
+      <hr>
+      {{ accommodation.likes }}
+      <a href="{% url 'likes' post_id=accommodation.id %}">
+        <i class='bx bx-like'>Like</i>
+      </a>
+      <hr>
+
+      <div>
+        <a href="#" class="btn btn-outline-info" data-toggle="modal" data-target="#myModal{{ accommodation.id }}">
+            comments
+          </a>
+      
+        <a href="{% url 'post_detail' post_id=accommodation.id %}" class="btn btn-outline-info" >
+          More Details
+        </a>
+      
+      </div>
+      
+
+      <!-- Modal for each post -->
+      <div class="modal fade" id="myModal{{ accommodation.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ accommodation.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel{{ accommodation.id }}">Comments</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="commentForm{{ accommodation.id }}" method="post" action="{% url 'add_comment' post_id=accommodation.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="id_body">Comment:</label>
+                  <textarea name="body" class="form-control" rows="3" id="id_body"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+              <hr>
+              <!-- List comments -->
+              <h5>Comments:</h5>
+              {% for comment in accommodation.comment.all %}
+              <div class="comment d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>{{ comment.user.username }}</strong>: {{ comment.body }}
+                  <p><small>{{ comment.date }}</small></p>
+                </div>
+                {% if comment.user == request.user %}
+                <div>
+                  <a href="{% url 'delete_comment' comment_id=comment.id %}" class="btn btn-danger btn-sm">
+                    <i class='bx bx-trash'></i>
+                  </a>
+                </div>
+                {% endif %}
+              </div>
+              <hr>
+              {% endfor %}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  {% endfor %}
+</div>
+{% endblock %}

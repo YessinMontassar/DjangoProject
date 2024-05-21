@@ -1,0 +1,47 @@
+  
+{% extends "student_help/base.html" %}
+
+{% block title %}Stages{% endblock %}
+
+
+{% block content %}
+   <div class="profile-container">
+        <img src="{{ profile.profile_picture.url }}" class="profile-picture" alt="Profile Picture">
+        <p class="username">{{ profile.user.username }}</p> <!-- Display username below the profile picture -->
+        <div style="padding-left: 600px;"><a style="background-color:#6862b1;color: aliceblue;" class="btn btn-outline-primary" href="{% url 'update_profile' %}" role="button" >Edit  profil</a></div>
+
+    </div>
+    
+    <div class="profile-container">
+        <h2>Posts:</h2>
+        {% for post in posts %}
+        <div class="card mx-auto" style="width: 40rem;">
+            <div class="card-header">
+                <h5>
+                    <img src="{{ post.user.profile.profile_picture.url }}" class="profile-picture-sm rounded-circle" alt="Profile Picture">
+                    {{ post.user.username }}
+                </h5>
+                {% if post.type == 1 %}
+                <small style="padding-top: 1px;" class="text-body-secondary">type: Offre /</small>
+                {% else %}
+                <small class="text-body-secondary">type: Demande /</small>
+                {% endif %}
+                <small style="padding-top: 1px;" class="text-body-secondary">{{ post.date }}</small>
+                <hr>
+            </div>
+            <img src="/media/{{ post.image }}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">ii</h5>
+                <p class="card-text">ii</p>
+                <a href="{% url 'likes' post_id=post.id %}">
+                    <i class='bx bx-like'>Like</i>
+                </a> ({{ post.likes }})
+                <a href="#" class="btn btn-outline-info">Details</a>
+            </div>
+        </div>
+        <br>
+        {% endfor %}
+    </div>
+    </div>
+   
+    {% endblock %}

@@ -1,40 +1,121 @@
-<!-- monapp/templates/stages.html -->
-
 {% extends "student_help/base.html" %}
 
 {% block title %}Stages{% endblock %}
 
 {% block content %}
 <br>
-
 <div class="container">
-  <div style="padding-left: 60px;"><a style="background-color:#11101d;color: aliceblue;" class="btn btn-outline-primary" href="{% url 'cree_stage' %}" role="button" >Post 📥</a></div>
+  <div style="padding-left: 60px;">
+    <a style="background-color:#11101d;color: aliceblue;" class="btn btn-outline-primary" href="{% url 'cree_stage' %}" role="button">Post 📥</a>
+  </div>
   {% for stage in stages %}
   <div class="card mx-auto" style="width: 40rem;">
     <div class="card-header">
-      <h5><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);"><path d="M12 2a5 5 0 1 0 5 5 5 5 0 0 0-5-5zm0 8a3 3 0 1 1 3-3 3 3 0 0 1-3 3zm9 11v-1a7 7 0 0 0-7-7h-4a7 7 0 0 0-7 7v1h2v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1z"></path></svg>{{ stage.user.name }} {{ stage.user.lastName }}</h5>
+      <div class="comment d-flex justify-content-between align-items-center">
+        <h5><img src="{{ stage.user.profile.profile_picture.url }}" class="profile-picture-sm rounded-circle" alt="Profile Picture">{{ stage.user.username }}</h5>
+      {% if stage.user == request.user %}
+      <div>
+        <form method="post" action="{% url 'delete_post' post_id=stage.id %}" style="display: inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-danger"><i class='bx bx-trash'></i></button>
+      </form>
+      <form method="post" action="{% url 'update_Stage' stage.pk %}" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-success"><i class='bx bxs-edit' ></i></button>
+    </form>
+      </div>
+    
+    {% endif %}
+
+      </div>
+      
       {% if stage.type == 1 %}
       <small style="padding-top: 1px;" class="text-body-secondary">type: Offre</small>
       {% else %}
       <small class="text-body-secondary">type: Demande</small>
       {% endif %}
-
-      
       <hr>
     </div>
 
-      <img src="/media/{{ stage.image }}" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">{{ stage.company }}</h5>
-        <p class="card-text">{{ stage.topic }}</p>
-        <a href="url_de_votre_action">
-          <i class='bx bx-like'>Like</i>
+    <img src="{{ stage.image.url }}" class="card-img-top" alt="...">
+    <div class="card-body">
+      {% if stage.typeStg == 1 %}
+      <h5 class="card-title">Stage Ouvrier</h5>
+      {% elif stage.typeStg == 2 %}
+      <h5 class="card-title">Stage technicien</h5>
+      {% else %}
+      <h5 class="card-title">Stage PFE</h5>
+      {% endif %}
+     
+      <h6 class="card-title"> Company :{{ stage.company }}</h6>
+      <p class="card-text">{{ stage.topic }}</p>
+      <p class="card-text">Phone Number : {{ stage.contactInfo }}</p>
+      <hr>
+      {{ stage.likes }}
+      <a href="{% url 'likes' post_id=stage.id %}">
+        <i class='bx bx-like'>Like</i>
       </a>
-       
-        <a href="#" class="btn btn-outline-info">Details</a>
+      <hr>
+
+<div>
+  <a href="#" class="btn btn-outline-info" data-toggle="modal" data-target="#myModal{{ stage.id }}">
+    comments
+  </a>
+
+  <a href="{% url 'post_detail' post_id=stage.id %}" class="btn btn-outline-info" >
+    More Details
+  </a>
+
+</div>
+      
+      <!-- Modal for each post -->
+      <div class="modal fade" id="myModal{{ stage.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ stage.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel{{ stage.id }}">Comments</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="commentForm{{ stage.id }}" method="post" action="{% url 'add_comment' post_id=stage.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="id_body">Comment:</label>
+                  <textarea name="body" class="form-control" rows="3" id="id_body"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+              <hr>
+              <!-- List comments -->
+              <h5>Comments:</h5>
+              {% for comment in stage.comment.all %}
+<div class="comment d-flex justify-content-between align-items-center">
+  <div>
+    <strong>{{ comment.user.username }}</strong>: {{ comment.body }}
+    <p><small>{{ comment.date }}</small></p>
+  </div>
+  {% if comment.user == request.user %}
+  <div>
+    <a href="{% url 'delete_comment' comment_id=comment.id %}" class="btn btn-danger btn-sm">
+      <i class='bx bx-trash'></i>
+    </a>
+  </div>
+  {% endif %}
+</div>
+<hr>
+{% endfor %}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <br>  
+  </div>
+  <br>
   {% endfor %}
 </div>
 {% endblock %}

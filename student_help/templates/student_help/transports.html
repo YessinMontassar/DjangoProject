@@ -1,0 +1,108 @@
+<!-- Dans votre fichier transports.html (template) -->
+{% extends "student_help/base.html" %}
+
+{% block title %}Transports{% endblock %}
+
+{% block content %}
+<br>
+<div class="container">
+  <div style="padding-left: 60px;">
+    <a style="background-color:#11101d;color: aliceblue;" class="btn btn-outline-primary" href="{% url 'cree_transport' %}" role="button">Post 📥</a>
+  </div>
+  {% for transport in transports %}
+  <div class="card mx-auto" style="width: 40rem;">
+    <div class="card-header">
+        <div class="comment d-flex justify-content-between align-items-center">
+            <h5><img src="{{ transport.user.profile.profile_picture.url }}" class="profile-picture-sm rounded-circle" alt="Profile Picture">{{ transport.user.username }}</h5>
+            {% if transport.user == request.user %}
+            <div>
+                <form method="post" action="{% url 'delete_transport' transport.pk %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger"><i class='bx bx-trash'></i></button>
+                </form>
+                <a href="{% url 'update_transport' transport.pk %}" class="btn btn-outline-success" style="display: inline;">
+                    <i class='bx bxs-edit'></i>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+      <hr>
+    </div>
+    {% if transport.image %}
+    <img src="{{ transport.image.url }}" class="card-img-top" alt="...">
+    {% endif %}
+    
+    <div class="card-body">
+      <h5 class="card-title">{{ transport.begin }} - {{ transport.destination }}</h5>
+      <p class="card-text">Hour Begin: {{ transport.hourBegin }}</p>
+      <p class="card-text">Number of Seats: {{ transport.nbrSeat }}</p>
+      <hr>
+      {{ transport.likes }}
+      <a href="{% url 'likes' post_id=transport.id %}">
+        <i class='bx bx-like'>Like</i>
+      </a>
+      <hr>
+
+      <div>
+        <a href="#" class="btn btn-outline-info" data-toggle="modal" data-target="#myModal{{ transport.id }}">
+            Comments
+        </a>
+      
+        <a href="{% url 'post_detail' post_id=transport.id %}" class="btn btn-outline-info">
+          More Details
+        </a>
+      
+      </div>
+      
+
+      <!-- Modal for each post -->
+      <div class="modal fade" id="myModal{{ transport.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ transport.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel{{ transport.id }}">Comments</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="commentForm{{ transport.id }}" method="post" action="{% url 'add_comment' post_id=transport.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="id_body">Comment:</label>
+                  <textarea name="body" class="form-control" rows="3" id="id_body"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+              <hr>
+              <!-- List comments -->
+              <h5>Comments:</h5>
+              {% for comment in transport.comment.all %}
+              <div class="comment d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>{{ comment.user.username }}</strong>: {{ comment.body }}
+                  <p><small>{{ comment.date }}</small></p>
+                </div>
+                {% if comment.user == request.user %}
+                <div>
+                  <a href="{% url 'delete_comment' comment_id=comment.id %}" class="btn btn-danger btn-sm">
+                    <i class='bx bx-trash'></i>
+                  </a>
+                </div>
+                {% endif %}
+              </div>
+              <hr>
+              {% endfor %}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  {% endfor %}
+</div>
+{% endblock %}
